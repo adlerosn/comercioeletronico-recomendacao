@@ -1,0 +1,7 @@
+__pycache__/**
+**/*~
+*~
+database.db
+database*.db
+*.csv
+README.txt
