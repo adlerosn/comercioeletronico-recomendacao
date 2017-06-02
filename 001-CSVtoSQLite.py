@@ -79,22 +79,28 @@ from io import StringIO
 
 for table in tables:
     print(table[1])
-    with open(table[0]) as csvfile:
-        wholefile = csvfile.read()
-#        reader = csv.reader(csvfile)
-        reader = csv.reader(StringIO(wholefile))
-        del wholefile
-        iterreader = iter(reader)
-        fields = next(iterreader)
-        preparedSql = (
-            'insert into '+table[1]+
-            '('+(','.join(fields))+') '+
-            'values ('+(','.join(['?']*len(fields)))+')'
-        )
-        print(preparedSql)
-        sys.stdout.flush()
-        for row in iterreader:
-            cursor.execute(preparedSql, row)
+    try:
+        with open(table[0]) as csvfile:
+            wholefile = csvfile.read()
+#            reader = csv.reader(csvfile)
+            reader = csv.reader(StringIO(wholefile))
+            del wholefile
+            iterreader = iter(reader)
+            fields = next(iterreader)
+            preparedSql = (
+                'insert into '+table[1]+
+                '('+(','.join(fields))+') '+
+                'values ('+(','.join(['?']*len(fields)))+')'
+            )
+            print(preparedSql)
+            sys.stdout.flush()
+            for row in iterreader:
+                cursor.execute(preparedSql, row)
+    except Exception as e:
+        print('Skipped: ',end='')
+        print(e.__class__.__name__,end='')
+        print(': ',end='')
+        print(e)
 
 
 cursor.close()
