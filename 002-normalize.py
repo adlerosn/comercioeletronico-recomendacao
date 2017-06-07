@@ -147,6 +147,81 @@ from
 
 cursor.execute('drop table movietag2')
 
+
+print('>> preprocessing')
+import libRecomendacao
+cursor.execute('''CREATE TABLE preprocessadoUsuario (
+    userIdMaior int,
+    userIdMenor int,
+    similaridade float
+)''')
+# cursor.execute('''CREATE TABLE preprocessadoFilme (
+#     movieIdMaior int,
+#     movieIdMenor int,
+#     similaridade float
+# )''')
+cursor.execute('select movieId from movies order by movieId desc limit 1')
+totalFilmes = cursor.fetchone()[0]
+cursor.execute('select distinct userId from ratings order by userId desc limit 1')
+totalUsuarios = cursor.fetchone()[0]
+matrizNotas = [[None for x in range(totalFilmes+1)] for y in range(totalUsuarios+1)]
+# matrizFilmes = [[None for x in range(totalUsuarios+1)] for y in range(totalFilmes+1)]
+print(totalUsuarios, totalFilmes)
+cursor.execute('select userId, movieId, rating from ratings')
+for rowRating in cursor.fetchall():
+    matrizNotas[rowRating[0]][rowRating[1]] = rowRating[2]
+#     matrizFilmes[rowRating[1]][rowRating[0]] = rowRating[2]
+# print('>>>> Filmes')
+# allNull = []
+# for filmeMaior in range(totalFilmes+1):
+#     if all(map(lambda a: a is None,matrizFilmes[filmeMaior])):
+#         allNull.append(filmeMaior)
+#         continue
+#     for filmeMenor in range(filmeMaior):
+#         if filmeMenor in allNull:
+#             continue
+#         sim = libRecomendacao.similaridade(
+#             matrizFilmes[filmeMaior],
+#             matrizFilmes[filmeMenor]
+#         )
+#         if sim is None:
+#             continue
+#         cursor.execute(
+#             'insert into preprocessadoFilme(movieIdMaior,movieIdMenor,similaridade) values (?,?,?)',
+#             (
+#                 filmeMaior,
+#                 filmeMenor,
+#                 sim
+#             )
+#         )
+print('>>>> Usuários')
+allNull = []
+for usuarioMaior in range(totalUsuarios+1):
+    if all(map(lambda a: a is None,matrizNotas[usuarioMaior])):
+        allNull.append(usuarioMaior)
+        continue
+    print(usuarioMaior)
+    for usuarioMenor in range(usuarioMaior):
+        if usuarioMenor in allNull:
+            continue
+        sim = libRecomendacao.similaridade(
+            matrizNotas[usuarioMaior],
+            matrizNotas[usuarioMenor]
+        )
+        if sim is None:
+            continue
+        ss = (
+            usuarioMaior,
+            usuarioMenor,
+            sim
+        )
+        cursor.execute(
+            'insert into preprocessadoUsuario(userIdMaior,userIdMenor,similaridade) values (?,?,?)',
+            ss
+        )
+pass
+
+
 cursor.close()
 connection.commit()
 connection.close()

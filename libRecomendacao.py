@@ -3,10 +3,26 @@
 
 from typing import Callable, List
 
+def filtrarNonesFora(a:list,b:list):
+    while len(a) > len(b):
+        del a[-1]
+    while len(a) < len(b):
+        del b[-1]
+    i = len(a) - 1
+    while i >= 0:
+        if a[i] is None or b[i] is None:
+            del a[i]
+            del b[i]
+        i-=1
+    return a,b
+
 def similaridade(
         a:List[float],
         b:List[float]
     )->float:
+    a,b = filtrarNonesFora(a[:], b[:])
+    if (len(a) == 0) or (len(b) == 0):
+        return None
     rabar = sum(a)/len(a)
     rbbar = sum(b)/len(b)
     num = 0
