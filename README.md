@@ -1,6 +1,8 @@
 2017/1: Comércio Eletrônico - Trabalho Prático 2
 ================================================
 
+![Build status](https://api.travis-ci.org/adlerosn/comercioeletronico-recomendacao.svg?branch=master)
+
 ## Grupo
 
 * Ádler Neves

@@ -5,6 +5,10 @@ import libRecomendacao
 import sqlite3
 import random
 
+#############################################
+##  Utilitários                            ##
+#############################################
+
 def clearScr():
     for i in range(10):
         print()
@@ -14,6 +18,10 @@ def pressEnterToReturn(msg:str = 'Pressione ENTER para voltar.')->str:
 
 def avg(iter):
     return sum(iter)/len(iter)
+
+#############################################
+##  Funções de modelo                      ##
+#############################################
 
 def pickTotalFilmes(db):
     cursor = db.cursor()
@@ -57,6 +65,12 @@ def pickGenres(db):
     cursor.close()
     return {g[0]:g[1] for g in generos}
 
+
+#############################################
+##  Dado um usuário e um filme, retorna a  ##
+##  classificação para o par               ##
+#############################################
+
 def predizNota(db,usuario,filme):
     totalFilmes = pickTotalFilmes(db)
     a = [None for x in range(totalFilmes+1)]
@@ -71,9 +85,19 @@ def predizNota(db,usuario,filme):
         c+=1
     return libRecomendacao.predicao(a,n,filme,libRecomendacao.similaridade)
 
+#############################################
+##  Dado um usuário e um filme, retorna a  ##
+##  classificação para o par; rapidamente  ##
+#############################################
+
 def predizNotaRapidamente(db,usuario,filme):
     notas = [rt[2] for rt in pickRatingsFilme(db,filme)]
-    return sum(notas)/len(notas)
+    return avg(notas)
+
+#############################################
+##  Pede para o usuário entrar com o ID de ##
+##  um usuário                             ##
+#############################################
 
 def getUsuario(db):
     cursor = db.cursor()
@@ -91,6 +115,11 @@ def getUsuario(db):
         else:
             return int(u)
 
+
+#############################################
+##  Procura por filmes no banco de dados   ##
+#############################################
+
 def searchMovie(db,u):
     u = u.replace('"',' ').replace('\'',' ').replace('%',' ').replace('_',' ')
     while '  ' in u:
@@ -103,6 +132,11 @@ def searchMovie(db,u):
     cursor.close()
     return r
 
+#############################################
+##  Exibe o resultado duma busca por       ##
+##  filmes                                 ##
+#############################################
+
 def printMovieTable(searchResults):
     tbl = '| {0:>8} | {1:<40} | {2:>4} |'
     tblDiv = '+'+10*'-'+'+'+42*'-'+'+'+6*'-'+'+'
@@ -112,6 +146,12 @@ def printMovieTable(searchResults):
     for searchResult in searchResults[:7]:
         print(tbl.format(*searchResult))
     print(tblDiv)
+
+
+#############################################
+##  Pede para o usuário entrar com o ID de ##
+##  um filme                               ##
+#############################################
 
 def getFilme(db):
     cursor = db.cursor()
@@ -133,8 +173,18 @@ def getFilme(db):
         else:
             return int(u)
 
+#############################################
+##  Garante que a nota estará no intervalo ##
+##  entre 0% e 100%                        ##
+#############################################
+
 def normalizaNota(pred):
     return max(min((pred*20),100),0)
+
+#############################################
+##  Exibe um menu genérico e aguarda uma   ##
+##  seleção válida                         ##
+#############################################
 
 def menuzaoGenerico(titulo:str, itens:dict)->int:
     o = ''
@@ -153,6 +203,12 @@ def menuzaoGenerico(titulo:str, itens:dict)->int:
         else:
             print()
     return int(o)
+
+#############################################
+##  Classifica um filme para um usuário    ##
+##  imprimindo o fitness do filme para o   ##
+##  usuário                                ##
+#############################################
 
 def menuClassificacaoUsuarioFilme(db):
     clearScr()
@@ -178,6 +234,11 @@ def menuClassificacaoUsuarioFilme(db):
         else:
             print('%d%%'%(normalizaNota(pred)))
     pressEnterToReturn()
+
+#############################################
+##  Recomenda até sete filmes para um      ##
+##  usuário                                ##
+#############################################
 
 def menuRecomendacaoFilmeParaUsuario(db):
     clearScr()
@@ -219,6 +280,13 @@ def menuRecomendacaoFilmeParaUsuario(db):
     else:
         print('Usuário não avaliou nada')
     pressEnterToReturn()
+
+#############################################
+##  Retorna o perfil do nicho de usuários  ##
+##  que se interessaram                    ##
+##  (ou desinteressaram) pelo filme de     ##
+##  acordo com seus gêneros                ##
+#############################################
 
 def menuRecomendacaoPerfilUsuarioParaFilme(db):
     clearScr()
@@ -283,6 +351,10 @@ def menuRecomendacaoPerfilUsuarioParaFilme(db):
         pass
     pressEnterToReturn()
 
+#############################################
+##  Menu principal                         ##
+#############################################
+
 def menuPrincipal(db):
     selecao = 1
     while selecao!=0:
@@ -302,6 +374,11 @@ def menuPrincipal(db):
         else:
             pass
     return
+
+#############################################
+##  Rotina principal;                      ##
+##  invoca o menu principal                ##
+#############################################
 
 def main():
     db = None
