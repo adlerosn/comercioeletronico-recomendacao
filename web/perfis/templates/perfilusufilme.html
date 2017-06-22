@@ -1,0 +1,80 @@
+<!-- connectedin/perfis/templates/perfil.html -->
+
+<!DOCTYPE html>
+<html lang="pt-br">
+
+  <head>
+    <meta charset="utf-8">
+    <title>Perfil de usuários para filme</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
+    <script src="bower_components/sweetalert2/dist/sweetalert2.min.js"></script>
+    <link rel="stylesheet" href="bower_components/sweetalert2/dist/sweetalert2.min.css">
+    <!-- Include a polyfill for ES6 Promises (optional) for IE11 and Android browser -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/core-js/2.4.1/core.js"></script>
+  </head>
+
+  <script>
+    function myFunction() {
+      // Declare variables 
+      var input, filter, table, tr, td, i;
+      input = document.getElementById("myInput");
+      filter = input.value.toUpperCase();
+      table = document.getElementById("myTable");
+      tr = table.getElementsByTagName("tr");
+
+      // Loop through all table rows, and hide those who don't match the search query
+      for (i = 0; i < tr.length; i++) {
+        td = tr[i].getElementsByTagName("td")[0];
+        console.log(td);
+        if (td) {
+          if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
+            tr[i].style.display = "";
+          } else {
+            tr[i].style.display = "none";
+          }
+        }
+      }
+    }
+
+    function fun() {
+      const swal = require('sweetalert2')
+      swal.queue([{
+        title: 'Aguarde Por Favor',
+        text: 'Estamos Preparando Tudo',
+        showLoaderOnConfirm: true,
+      }])
+    }
+  </script>
+
+
+
+
+  <body>
+    <h1>Perfil de usuários para filme </h1>
+    <a href="bemvindo.html">Voltar</a>
+    <input type="text" id="myInput" class="form-control form-control-lg" onkeyup="myFunction()" placeholder="Procure aqui o filme">
+
+    <table class="table table-hover" id="myTable">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>First Name</th>
+          <th>Clique Para Calcular</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for perfil in listaFilmes %}
+        <tr>
+          <th scope="row">{{perfil.id}} </th>
+          <td>{{perfil.nome}}</td>
+          <td> <a href="perfilusufilmeresposta.html/{{perfil.id}}" type="button" onclick="fun()" class="btn btn-success">Calcular</a> </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </body>
+
+</html>

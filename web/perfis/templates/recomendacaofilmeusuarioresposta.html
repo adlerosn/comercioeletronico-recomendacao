@@ -1,0 +1,46 @@
+<!-- connectedin/perfis/templates/perfil.html -->
+
+<!DOCTYPE html>
+<html lang="pt-br">
+
+  <head>
+    <meta charset="utf-8">
+    <title>Recomendações de filmes para usuário</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
+  </head>
+
+  <body>
+    <h1>Recomendações de filmes para usuário</h1>
+    <a href="~/bemvindo.html">Voltar</a>
+
+    <div style="display: {{ATIVADO}}" class="alert alert-success" role="alert">
+      <strong>{{retorno}}</strong>{{pessoas.nome}}
+    </div>
+
+    <table class="table table-hover" id="myTable">
+      <thead>
+        <tr>
+          <th>Gênero</th>
+          <th>Nicho (%)</th>
+          <th>Filme(%)</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for retornom in retornomax %}
+        <tr>
+          <th scope="row">{{retornom.id}}</th>
+          <td>{{retornom.nome}}</td>
+          <td>{{retornom.string}} </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </body>
+  <footer>
+
+  </footer>
+
+</html>
